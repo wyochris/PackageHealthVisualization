@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+    />
+    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- <link rel="stylesheet" href="styles/links.css"> -->
+    <title>Calendar</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top">
+      <a class="navbar-brand" href="#">Calendar</a>
+      <div class="links-row">
+        <div>
+          <button type="button" class="btn btn-block" id="navHomeButton">
+            <img class="navImg" src="images\home.png" alt="Responsive image" />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="2"
+            type="button"
+            class="btn btn-block"
+            id="navChatButton"
+          >
+            <img class="navImg" src="images\chat.png" alt="Responsive image" />
+          </button>
+        </div>
+
+        <div>
+          <button
+            data-button-index="5"
+            type="button"
+            class="btn btn-block"
+            id="navCalendarButton"
+          >
+            <img
+              class="navImg"
+              src="images\calendar.png"
+              alt="Responsive image"
+            />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="6"
+            type="button"
+            class="btn btn-block"
+            id="navLinksButton"
+          >
+            <img class="navImg" src="images\links.png" alt="Responsive image" />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="4"
+            type="button"
+            class="btn btn-block"
+            id="navSettingsButton"
+          >
+            <img
+              class="navImg"
+              src="images\settings.png"
+              alt="Responsive image"
+            />
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container page-container">
+      <div id="buttonRow">
+        <div class="col-6">
+          <button
+            id="newEventButton"
+            type="button"
+            class="btn bmd-btn-fab"
+            data-toggle="modal"
+            data-target="#addQuoteDialog"
+          >
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+        <!-- <div class="col-6">
+        <button id="deleteEventButton" type="button" class="btn" data-toggle="modal" data-target="#deleteQuoteDialog">
+          Delete Event
+        </button>
+      </div> -->
+      </div>
+    </div>
+    <div id="mainCalendarPage" class="container page-container">
+      <!-- <div class="row">
+      <div id="dayWeek" class="card col-4">
+        <div class="card-body">
+          <h5 class="card-title">10</h5>
+          <h7 id="weekday" class="card-subtitle mb-2">Tue</h7>
+        </div>
+      </div>
+      <div id="eventDetail" class="card col-7">
+        <div class="card-body">
+          <h5 class="card-title">CSSE280 Milestone Work</h5>
+          <h6 class="card-subtitle mb-2 text-muted">5:00 pm EST - 6:00 pm EST</h6>
+        </div>
+      </div>
+
+    </div> -->
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addQuoteDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Event</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group bmd-form-group">
+              <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+              <label for="eventName" class="bmd-label-floating"
+                >Name of Event</label
+              >
+              <input type="text" class="form-control" id="eventName" />
+            </div>
+            <div class="form-group bmd-form-group">
+              <!-- manually specified -->
+              <label for="inputLocation" class="bmd-label-floating"
+                >Location</label
+              >
+              <input type="text" class="form-control" id="inputLocation" />
+              <span class="bmd-help"
+                >Enter either a physical location or a link to a virtual
+                meeting</span
+              >
+            </div>
+            <div class="smallText">From:</div>
+            <input type="datetime-local" id="fromDate" />
+
+            <div class="dropdown">
+              <button onclick="toggleDropdown()" class="dropbtn">Teams</button>
+              <div id="myDropdown" class="dropdown-content"></div>
+            </div>
+
+            <div class="smallText">To:</div>
+            <input type="datetime-local" id="toDate" />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              CANCEL
+            </button>
+            <button
+              id="submitAddEvent"
+              type="button"
+              class="btn btn-primary"
+              data-dismiss="modal"
+            >
+              CREATE
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="modal fade" id="deleteQuoteDialog" tabindex="-1" role="dialog" aria-labelledby="Delete quote dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete this Movie Quote</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this movie quote?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="submitDeleteQuote" type="button" class="btn btn-primary" data-dismiss="modal">DELETE</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.js"></script>
+    <script src="scripts/bootstrap-material-design.js"></script>
+    <script>
+      $("body").bootstrapMaterialDesign();
+    </script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

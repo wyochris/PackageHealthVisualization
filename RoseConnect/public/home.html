@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+    />
+    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css" />
+    <link rel="stylesheet" href="styles/home.css" />
+    <title>Rose Connect</title>
+  </head>
+
+  <body>
+    <div id="homePage" class="container page-container mx-auto">
+      <br />
+      <div class="row justify-content-center">
+        <!-- <div id="signoutrect"> -->
+        <button id="signoutButton" class="btn">Sign Out</button>
+        <!-- </div> -->
+      </div>
+      <br />
+      <br />
+      <div class="row mx-auto justify-content-center">
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-block homeButtons"
+            id="chatButton"
+          >
+            <img
+              class="homeImg"
+              src="images\chathome.png"
+              alt="Responsive image"
+            />
+            <h2>Chat</h2>
+          </button>
+        </div>
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-block homeButtons"
+            id="settingsButton"
+          >
+            <img
+              class="homeImg"
+              src="images\settingshome.png"
+              alt="Responsive image"
+            />
+            <h2>Settings</h2>
+          </button>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="row mx-auto">
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-block homeButtons"
+            id="linksButton"
+          >
+            <img
+              class="homeImg"
+              src="images\linkshome.png"
+              alt="Responsive image"
+            />
+            <h2>Links</h2>
+          </button>
+        </div>
+        <!-- <div class="col-2"></div> -->
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-block homeButtons"
+            id="calendarButton"
+          >
+            <img
+              class="homeImg"
+              src="images\calendarhome.png"
+              alt="Responsive image"
+            />
+            <h2>Calendar</h2>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.js"></script>
+    <script src="scripts/bootstrap-material-design.js"></script>
+    <script>
+      $("body").bootstrapMaterialDesign();
+    </script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

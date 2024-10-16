@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="styles/schedule.css" />
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <title>Sign Up</title>
+</head>
+
+<body>
+
+    <div id="mainSignInPage" class="container page-container">
+
+        <!-- <div class="modal-body"> -->
+        <div class="flex-rectangle">
+            <p>Fill out these fields to sign up</p>
+            <!-- <form> -->
+                <!-- <div class="form-group">
+                    <label for="inputEmail" class="bmd-label-floating required">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail" required>
+                </div> -->
+                <!-- <div class="form-group">
+                    <label for="inputPassword" class="bmd-label-floating required">Password</label>
+                    <input minlength="8" type="password" class="form-control" id="inputPassword" required>
+                </div> -->
+                <div class="form-group">
+                    <label for="firstName" class="bmd-label-floating required">Enter your first name</label>
+                    <input type="text" class="form-control" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="bmd-label-floating required">Enter your last name</label>
+                    <input type="text" class="form-control" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstClass" class="bmd-label-floating required">Enter your first class</label>
+                    <input type="text" class="form-control" id="firstClass" required>
+                </div>
+                <div class="form-group">
+                    <label for="secondClass" class="bmd-label-floating">Enter your second class</label>
+                    <input type="text" class="form-control" id="secondClass">
+                </div>
+                <div class="form-group">
+                    <label for="thirdClass" class="bmd-label-floating">Enter your third class</label>
+                    <input type="text" class="form-control" id="thirdClass">
+                </div>
+                <div class="form-group">
+                    <label for="fourthClass" class="bmd-label-floating">Enter your fourth class</label>
+                    <input type="text" class="form-control" id="fourthClass">
+                
+                </div>
+                <h6 class="text-center">
+                    Select the days and times that you are available
+                  </h6>
+                  <div class="App mx-auto"></div>
+                  <br />
+                <!-- <button id="submitSignupButton" class="btn"><input type="submit" hidden> done</button> -->
+                <button id="submitSignupButton" type="button" class="btn">done</button>
+            <!-- </form> -->
+            <!-- <button type="button" class="btn">Done</button> -->
+            <!-- <button id="listPage" class="btn">sign out</button>
+            <button id="calendar" class="btn">calendar</button>
+        </div> -->
+        <!-- </div> -->
+    </div>
+    <script
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel" src="scripts/Row.js"></script>
+    <script type="text/babel" src="scripts/Square.js"></script>
+    <script
+    src="https://unpkg.com/react@16/umd/react.production.min.js"
+    crossorigin
+  ></script>
+  <script
+    src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    crossorigin
+  ></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel" src="scripts/Row.js"></script>
+  <script type="text/babel" src="scripts/Square.js"></script>
+  
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/popper.js"></script>
+  <script src="scripts/bootstrap-material-design.js"></script>
+  <script>
+    $("body").bootstrapMaterialDesign();
+  </script>
+  <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+  <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+  <script src="/__/firebase/init.js"></script>
+
+  <script type="text/babel">
+    window.sessionStorage.clear(); // clears schedule
+  </script>
+  <script src="scripts/main.js"></script>
+
+  <script type="text/babel">
+
+    const weekdays = [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
+    ];
+
+    // Generates times array; half hour intervals from start to end
+    let times = [];
+    while (times[times.length - 1] != "08:00 PM") {
+      let ampm = "AM";
+      if (times.length > 0) {
+        let timeStr = times[times.length - 1];
+        if (timeStr.includes("PM") || timeStr == "11:30 AM") {
+          ampm = "PM";
+        }
+        let prevHour = timeStr.substring(0, 2);
+        let prevMinutes = timeStr.substring(3, 5);
+        let nexHour = parseInt(prevHour);
+        let nexMinutes = "30";
+        if (prevMinutes == "30") {
+          if (prevHour == "12") {
+            nexHour = 1;
+          } else {
+            nexHour++;
+          }
+          nexMinutes = "00";
+        }
+        if (nexHour < 10) {
+          nexHour = "0" + nexHour.toString();
+        } else {
+          nexHour = nexHour.toString();
+        }
+        times.push(nexHour + ":" + nexMinutes + " " + ampm);
+      } else {
+        times.push("08:00 " + ampm);
+      }
+    }
+    console.log(times);
+
+    // Creates all the grid components
+    let columns = [];
+    let dayRow = [];
+    for (let j = 0; j < weekdays.length; j++) {
+      dayRow.push(
+        <span className="day">{weekdays[j] ? weekdays[j] : "Weekday"}</span>
+      );
+    }
+    columns.push(<Row contents={dayRow} time={null} />);
+
+    // Adds the components to the app
+    for (let i = 0; i < times.length; i++) {
+      let row = [];
+      for (let j = 0; j < weekdays.length; j++) {
+        row.push(<Square day={weekdays[j]} time={times[i]} />);
+      }
+      columns.push(<Row contents={row} time={times[i]} />);
+    }
+
+    ReactDOM.render(<>{columns}</>, document.querySelector(".App"));
+  </script>
+</body>
+</html>

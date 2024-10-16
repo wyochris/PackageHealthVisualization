@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+    />
+    <link rel="stylesheet" href="styles/bootstrap-material-design.min.css" />
+    <link rel="stylesheet" href="styles/links.css" />
+    <title>Rose Connect</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top">
+      <div class="links-row">
+        <div>
+          <button type="button" class="btn btn-block" id="navHomeButton">
+            <img class="navImg" src="images\home.png" alt="Responsive image" />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="2"
+            type="button"
+            class="btn btn-block"
+            id="navChatButton"
+          >
+            <img class="navImg" src="images\chat.png" alt="Responsive image" />
+          </button>
+        </div>
+
+        <div>
+          <button
+            data-button-index="5"
+            type="button"
+            class="btn btn-block"
+            id="navCalendarButton"
+          >
+            <img
+              class="navImg"
+              src="images\calendar.png"
+              alt="Responsive image"
+            />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="6"
+            type="button"
+            class="btn btn-block"
+            id="navLinksButton"
+          >
+            <img class="navImg" src="images\links.png" alt="Responsive image" />
+          </button>
+        </div>
+        <div>
+          <button
+            data-button-index="4"
+            type="button"
+            class="btn btn-block"
+            id="navSettingsButton"
+          >
+            <img
+              class="navImg"
+              src="images\settings.png"
+              alt="Responsive image"
+            />
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div id="linksPage" class="container page-container">
+      <br />
+      <br />
+      <div class="row justify-content-center">
+        <h2>Useful Links</h2>
+      </div>
+      <br />
+      <div class="row">
+        <h4>Library Reservation:</h4>
+      </div>
+      <div class="row justify-content-center">
+        <a href="https://rose-hulman.libcal.com/reserve/rooms">
+          <img
+            id="libraryResButton"
+            class="linksImg"
+            src="images\books.png"
+            alt="Responsive image"
+          />
+        </a>
+      </div>
+      <hr />
+      <div class="row">
+        <h4>Learning Center Contact:</h4>
+      </div>
+
+      <div class="row justify-content-center">
+        <a
+          href="https://www.rose-hulman.edu/campus-life/student-services/learning-center/how-to-use.html"
+        >
+          <img
+            id="learningCenterButton"
+            class="linksImg"
+            src="images\library.png"
+            alt="Responsive image"
+          />
+        </a>
+      </div>
+    </div>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.js"></script>
+    <script src="scripts/bootstrap-material-design.js"></script>
+    <script>
+      $("body").bootstrapMaterialDesign();
+    </script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
