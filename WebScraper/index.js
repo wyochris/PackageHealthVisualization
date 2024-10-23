@@ -11,98 +11,175 @@ app.use(express.json({limit: '200mb'}));
     // app.use(.urlencoded({ extended: true }));
 app.use(express.urlencoded({limit: '200mb', extended: true}));
 
+app.get('/getPackageData/:packageName', async function(req, res) {
+    let packageName = req.params.packageName;
+    console.log("getPackageData: "+packageName);
+    try {
+        let packageData = await getPackageData(packageName);
+        res.send(packageData);
+    } catch (error) {
+        res.status(500).send('500 Internal Server Error');
+    };
+});
+
 var puppeteer = require('puppeteer');
 
     //#region Scrape
-    async function getPage(daysAgo) {
-        const browser = await puppeteer.launch({headless: "new"});
-        const options = {
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-                '--single-process',
-                '--disable-gpu'
-            ],
-            headless: true
-        }
-        const page = await browser.newPage(options);
-        await page.goto("", { waituntil: "load" } );
+    async function getPackageData(packageName) {
+        // # dependents, # dependencies, # versions, age (years), weekly downloads
+        let browser = await puppeteer.launch({headless:
+            // false
+            "new"
+        });let page = await getPage(packageName, browser);
+        let packageData = await loadPackageData(page);
+        await browser.close();
+        return packageData;
+    }
+    async function getPage(packageName, browser) {
+        let page = await browser.newPage();
+        await page.goto(`https://www.npmjs.com/package/${packageName}`, { waituntil: "load" } );
         return page;
     }
-    // meals = ["breakfast", "lunch", "dinner"];
-    // meals = ["brunch"];
-    // meals = ["brunch", "dinner"];
-    async function getPackageData(daysAgo,mealstr) {
-        let toRet = [];
-        // Make sure to get from all meals and also from all food tiers
-            // document.querySelector("#lunch .site-panel__daypart-tabs [data-key-index='0'] .h4")
-            // Special: data-key-index 0
-            // Additional: data-key-index 1
-            // Condiment: data-key-index 2
-        // Good for double-checking overall "#breakfast .script", has an array of all food IDs in meal
-                // puppeteering
-        const page = await getPage(daysAgo);
-        let menu = await JSON.parse(await getMenu(page));
-        await getFoods(page, mealstr,foodTier.Special, toRet,menu);
-        await getFoods(page, mealstr,foodTier.Additional, toRet,menu);
-        await getFoods(page, mealstr,foodTier.Condiment, toRet,menu);
+
+    async function loadPackageData(page) {
+        console.log("Loading data...");
+        // document.querySelectorAll("li > a > span")[idx].innerText
+            // [3] numDependents
+            // [2] numDependencies
+            // [4] numVersions
+        let nn = await page.$$("li > a > span");
+        let numDependents = await page.evaluate((el) => el.innerText, nn[3]);
+        let numDependencies = await page.evaluate((el) => el.innerText, nn[2]);
+        let numVersions = await page.evaluate((el) => el.innerText, nn[4]);
+        // weeklyDownloads
+        let n = await page.$("[aria-label='Showing weekly downloads'] div p");
+        let weeklyDownloads = await page.evaluate((el) => el.innerText, n);
+        
+            await timeout(1000); // yay magic, increase if starts failing
+            /**
+               Array.from(document.querySelectorAll('div div div h3'))
+               .filter((word) => word.innerText == "Unpacked Size")[0].closest("div").children[1].innerText
+               */
+                // Works for: 
+                    // unpackedSize, totalFiles, issues, pullRequests, lastPublished
+            let arr = await page.$$('div div div h3');
+            console.log(arr.length);
+        let unpackedSize =
+            await page.evaluate((el) => el.closest("div").children[1].innerText,    
+                (await asyncFilter(arr, async (word) => 
+                    {
+                    let text = await page.evaluate((el) => el.innerText, word);
+                    return text == "Unpacked Size";
+                    }))[0]);
+        let totalFiles =
+            await page.evaluate((el) => el.closest("div").children[1].innerText,    
+            (await asyncFilter(arr, async (word) => 
+                {
+                let text = await page.evaluate((el) => el.innerText, word);
+                return text == "Total Files";
+                }))[0]);
+
+        let issues = 
+        await page.evaluate((el) => el.closest("div").children[1].innerText,    
+            (await asyncFilter(arr, async (word) => 
+                {
+                let text = await page.evaluate((el) => el.innerText, word);
+                return text == "Issues";
+                }))[0]);
+        let pullRequests = 
+        await page.evaluate((el) => el.closest("div").children[1].innerText,    
+            (await asyncFilter(arr, async (word) => 
+                {
+                let text = await page.evaluate((el) => el.innerText, word);
+                return text == "Pull Requests";
+                }))[0]);
+        let lastPublished = 
+        await page.evaluate((el) => el.closest("div").children[1].innerText,    
+            (await asyncFilter(arr, async (word) => 
+                {
+                let text = await page.evaluate((el) => el.innerText, word);
+                return text == "Last publish";
+                }))[0]);
+
+        numDependencies = parseInt(clean(numDependencies));
+        numDependents = parseInt(clean(numDependents));
+        numVersions = parseInt(clean(numVersions));
+        weeklyDownloads = parseInt(clean(weeklyDownloads));
+        unpackedSize = convertToKb(unpackedSize);
+        lastPublished = monthDayOrYear(lastPublished);
+        totalFiles = parseInt(totalFiles);
+        issues = parseInt(issues);
+        pullRequests = parseInt(pullRequests);
+
+        let toRet = {
+            numDependencies, // need to clean
+            numDependents,// need to clean
+            numVersions,// need to clean
+            weeklyDownloads,// need to clean
+            unpackedSize,// need to parse and convert to kb
+            totalFiles,
+            issues,
+            pullRequests,
+            lastPublished// need to parse and convert to years, for now 0
+        };
         return toRet;
     }
 
-    async function getFoods(page,mealstr,tier,toRet,menu) {
-        const nn = await page.$$("#"+mealstr+" .site-panel__daypart-tabs [data-key-index='"+tier+"'] .h4"); // all foods in the meal
-        for (let i = 0; i < nn.length; i++) {
-            const id = ( await page.evaluate((el) => el.getAttribute("data-id"), nn[i]));
-            // console.log("data id: "+id);
-            const name = menu[id]["label"];
-            // console.log("fude name: "+name);
-            // console.log(name);
-            if ("nutrition_details" in menu[id] && Object.keys(menu[id]["nutrition_details"]).length > 0) {
-                const calories = menu[id]["nutrition_details"]["calories"]["value"];
-                const carbs = menu[id]["nutrition_details"]["carbohydrateContent"]["value"];
-                const rote = menu[id]["nutrition_details"]["proteinContent"]["value"];
-                const phat = menu[id]["nutrition_details"]["fatContent"]["value"];
-                const servingSize = menu[id]["nutrition_details"]["servingSize"]["value"];
-                const servingUnits = menu[id]["nutrition_details"]["servingSize"]["unit"];
-                
-                const v = ("cor_icon" in menu[id]) && ("1" in menu[id]["cor_icon"]); // if there is no cor_icon then consider using gpt-ing, but prlly good enough to assume meat
-                const ve = ("cor_icon" in menu[id]) && ("4" in menu[id]["cor_icon"]); // may be subject to update
-                const gf = ("cor_icon" in menu[id]) && ("9" in menu[id]["cor_icon"]);
-    
-                if (name.includes("tuscan chicken and kale stew")) {
-                    console.log("tuscan food: "+name);
-                    console.log("fooed veg?: "+(("cor_icon" in menu[id]) && ("1" in menu[id]["cor_icon"])));
-    
-                    console.log("vegetarian: "+v);
-                    console.log("vegan: "+ve);
-                    console.log("gluten free: "+gf);
-                }
-    
-                // the front end should also recoil in horror, separately
-                    // There should be a strikethrough /graying out of any non-veg in reqs or general list
-                toRet.push(food_factory(id,name,calories,carbs,rote,phat,mealstr,tier,servingSize,servingUnits,false,v,ve,gf));
-            } else {
-                toRet.push(food_factory(id,name,0,0,0,0,mealstr,tier,0,"",true,true,false,false)); // Southwest Beef Bowl case
-            }
+    let asyncFilter = async (arr, predicate) => {
+        let results = await Promise.all(arr.map(predicate));
+        return arr.filter((_v, index) => results[index]);
+    }
+
+    function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function clean (str) {
+        return str.split(" ")[0].split(",").join("");
+    }
+
+    function monthDayOrYear(str) {
+        if (str.includes("day")) {
+            return 2;
+        } else if (str.includes("month")) {
+            return 1;
+        } else if (str.includes("year")) {
+            return 0;
+        } else {
+           return -1;
         }
     }
 
-    app.get('/getPackageData/:packageName', async function(req, res) {
-        console.log("getPackageData: "+req.params.packageName);
-        let mealnames = [];
-        try {
-                // mealnames = await getMealNames(daysAgo);
-            res.send(mealnames);
-        } catch (error) {
-            res.status(500).send('500 Internal Server Error');
+    function convertToKb(input) {
+        // Split the input string into value and unit
+        let [value, unit] = input.split(" ");
+        
+        // Convert the value to a number
+        value = parseFloat(value);
+    
+        // Normalize the unit to lowercase for comparison
+        unit = unit.toLowerCase();
+    
+        // Define conversion factors relative to kilobytes
+        let conversionFactors = {
+            "b": 1 / 1024,   // bytes to kilobytes
+            "kb": 1,         // kilobytes to kilobytes
+            "mb": 1024,      // megabytes to kilobytes
+            "gb": 1024 * 1024, // gigabytes to kilobytes
+            "tb": 1024 * 1024 * 1024 // terabytes to kilobytes
         };
-    });
+    
+        // Check if the unit exists in our conversion factors
+        if (conversionFactors[unit]) {
+            // Return the value converted to kilobytes
+            return value * conversionFactors[unit];
+        } else {
+            // If unit is unknown, return null or throw an error
+            throw new Error(`Unknown memory unit: ${unit}`);
+        }
+    }
 
-    console.log("Up and runnning!");
-
-
+    
+    
+console.log("Up and runnning!");
 app.listen(3000);
