@@ -4,10 +4,12 @@ Setup
 - node index.js
 
 API (localhost:3000)
+
 Create
 
 Read
-- /getPackageData/{package name}
+
+/getPackageData/{package name}
   - Returns: 
         {
             numDependencies,
