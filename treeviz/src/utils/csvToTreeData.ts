@@ -1,12 +1,24 @@
+import * as d3 from 'd3';
+
+
+class Node implements d3.SimulationNodeDatum {
+  public x: number | undefined;
+  public y: number | undefined;
+  constructor (public id: number) {}
+  public name: string = ''; // Node name
+}
+
 export const csvToTreeData = (data: string[][]) => {
     const [, nodeNames, nodeWeights, rootNode, ...edges] = data;
   
     // Create nodes based on the node names and weights
-    const nodes = nodeNames.map((name, index) => ({
-      id: index + 1,  // Node IDs are 1-based
-      name,
-      weight: parseInt(nodeWeights[index], 10),
-    }));
+    const nodes: Node[] = nodeNames.map((name, index) => {
+      const node = new Node(index + 1);  // Node IDs are 1-based
+      node.x = 0;
+      node.y = 0;
+      node.name = name;
+      return node;
+    });
   
     // root node
     const rootId = parseInt(rootNode[0], 10);
