@@ -13,6 +13,8 @@
     "commander": "^12.1.0"
   },
   "bin": {
-    "my-command": "./index.js"
+    "my-command": "./index.js",
+    "generate-raw-tree": "./getrawtree.js",
+    "generate-tree-file": "./gettreefile.js"
   }
 }

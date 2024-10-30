@@ -1,0 +1,5 @@
+- npm init -y
+- chmod +x index.js
+- https://dev.to/scooperdev/use-npm-pack-to-test-your-packages-locally-486e
+  - npm pack --pack-destination ~
+  - npm install --global getdependencytree-1.0.0.tgz
