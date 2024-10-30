@@ -57,10 +57,10 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
 
         node
             .append('circle')
-            .attr('r', 10)
+            .attr('r', 20) //weight = health
             .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'));
 
-        node.append("text")
+        node.append("text") // labels to beinside the circle
             .text((d: any) => d.name)
             .attr('x', 12)
             .attr('y', 4)
