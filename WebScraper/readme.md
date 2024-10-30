@@ -22,6 +22,9 @@ Read
             pullRequests,
             lastPublished // 0, 1, or 2 for years, months, or days
         }
+    - Examples
+      - localhost:3000/getPackageData/%40tediousjs%2Fconnection-string
+      - localhost:3000/getPackageData/puppeteer
 
 Update
 
