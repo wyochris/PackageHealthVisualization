@@ -29,9 +29,11 @@ async function getPackageData(packageName) {
     let browser = await puppeteer.launch({headless:
         // false
         "new"
-    });let page = await getPage(packageName, browser);
+    });
+    let page = await getPage(packageName, browser);
     let packageData = await loadPackageData(page);
     await browser.close();
+    console.log(Object.values(packageData));
     return packageData;
 }
 async function getPage(packageName, browser) {
@@ -181,4 +183,4 @@ function convertToKb(input) {
 
 console.log("Up and runnning!");
 
-app.listen(3000);
+app.listen(8083);

@@ -1,0 +1,4 @@
+packageNames,numDependents,numDependencies,numVersions,weeklyDownloads,unpackedSize,totalFiles,issues,pullRequests,lastPublished,scores,
+cors,17773,2,34,12592913,20,6,22,9,0,undefined,
+object-assign,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,
+vary,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,

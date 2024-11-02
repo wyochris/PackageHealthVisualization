@@ -195,8 +195,3 @@ ${weights+"".trim()}
 ${fileContents.root+"".trim()},${edges}`;
     return toRet;
 }
-
-// TODO
-// then a command for reading given the namme and output tree file
-// finish usage
-   // add install steps
