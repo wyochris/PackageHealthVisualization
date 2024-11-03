@@ -18,6 +18,7 @@ app.get('/getPackageData/:packageName', async function(req, res) {
         let packageData = await getPackageData(packageName);
         res.send(packageData);
     } catch (error) {
+        console.log(error);
         res.status(500).send('500 Internal Server Error');
     };
 });
@@ -57,6 +58,7 @@ async function loadPackageData(page) {
     let weeklyDownloads = await page.evaluate((el) => el.innerText, n);
     
         await timeout(1000); // yay magic, increase if starts failing
+        // await timeout(100000); // for debugging
         /**
              Array.from(document.querySelectorAll('div div div h3'))
             .filter((word) => word.innerText == "Unpacked Size")[0].closest("div").children[1].innerText
@@ -65,53 +67,20 @@ async function loadPackageData(page) {
             // Works for: 
                 // unpackedSize, totalFiles, issues, pullRequests, lastPublished
         let arr = await page.$$('div div div h3');
-        console.log(arr.length);
-    let unpackedSize =
-        await page.evaluate((el) => el.closest("div").children[1].innerText,    
-            (await asyncFilter(arr, async (word) => 
-                {
-                let text = await page.evaluate((el) => el.innerText, word);
-                return text == "Unpacked Size";
-                }))[0]);
-    let totalFiles =
-        await page.evaluate((el) => el.closest("div").children[1].innerText,    
-        (await asyncFilter(arr, async (word) => 
-            {
-            let text = await page.evaluate((el) => el.innerText, word);
-            return text == "Total Files";
-            }))[0]);
-
-    let issues = 
-    await page.evaluate((el) => el.closest("div").children[1].innerText,    
-        (await asyncFilter(arr, async (word) => 
-            {
-            let text = await page.evaluate((el) => el.innerText, word);
-            return text == "Issues";
-            }))[0]);
-    let pullRequests = 
-    await page.evaluate((el) => el.closest("div").children[1].innerText,    
-        (await asyncFilter(arr, async (word) => 
-            {
-            let text = await page.evaluate((el) => el.innerText, word);
-            return text == "Pull Requests";
-            }))[0]);
-    let lastPublished = 
-    await page.evaluate((el) => el.closest("div").children[1].innerText,    
-        (await asyncFilter(arr, async (word) => 
-            {
-            let text = await page.evaluate((el) => el.innerText, word);
-            return text == "Last publish";
-            }))[0]);
-
-    numDependencies = parseInt(clean(numDependencies));
-    numDependents = parseInt(clean(numDependents));
-    numVersions = parseInt(clean(numVersions));
-    weeklyDownloads = parseInt(clean(weeklyDownloads));
-    unpackedSize = convertToKb(unpackedSize);
-    lastPublished = monthDayOrYear(lastPublished);
-    totalFiles = parseInt(totalFiles);
-    issues = parseInt(issues);
-    pullRequests = parseInt(pullRequests);
+        let unpackedSize = await getOrFail("Unpacked Size", arr, page);
+        let totalFiles = await getOrFail("Total Files", arr, page);
+        let issues = await getOrFail("Issues", arr ,page);
+        let pullRequests = await getOrFail("Pull Requests", arr, page);
+        let lastPublished = await getOrFail("Last publish", arr, page);
+        numDependencies = numDependencies==-1?-1:parseInt(clean(numDependencies));
+        numDependents = numDependents==-1?-1:parseInt(clean(numDependents));
+        numVersions = numVersions==-1?-1:parseInt(clean(numVersions));
+        weeklyDownloads = weeklyDownloads==-1?-1:parseInt(clean(weeklyDownloads));
+        unpackedSize = unpackedSize==-1?-1:convertToKb(unpackedSize);
+        lastPublished = lastPublished==-1?-1:monthDayOrYear(lastPublished);
+        totalFiles = totalFiles==-1?-1:parseInt(totalFiles);
+        issues = issues==-1?-1:parseInt(issues);
+        pullRequests = pullRequests==-1?-1:parseInt(pullRequests);
 
     let toRet = {
         numDependencies, // need to clean
@@ -125,6 +94,15 @@ async function loadPackageData(page) {
         lastPublished// need to parse and convert to years, for now 0
     };
     return toRet;
+}
+
+async function getOrFail(str, arr, page) {
+    let barr = (await asyncFilter(arr, async (word) => 
+        {
+        let text = await page.evaluate((el) => el.innerText, word);
+        return text == str;
+        }));
+        return barr.length?await page.evaluate((el) => el.closest("div").children[1].innerText, barr[0]):-1;
 }
 
 let asyncFilter = async (arr, predicate) => {

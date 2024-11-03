@@ -58,7 +58,7 @@ program
     };
 
     for (let i = 0; i < results.length; i++) {
-        console.log(Object.keys(results[i]));
+        // console.log(Object.keys(results[i]));
         fileContents.packageNames.push(tree_names[i]);
         fileContents.numDependents.push(results[i].numDependents);
         fileContents.numDependencies.push(results[i].numDependencies);
@@ -131,7 +131,7 @@ async function getScore(packageName) {
                 }
             })
             .then(response=>response.json());
-            console.log("Data schema: "+Object.keys(data));
+            // console.log("Data schema: "+Object.keys(data));
             console.log("Loaded: "+packageName);
             return data;
         } catch(err) {
@@ -141,11 +141,11 @@ async function getScore(packageName) {
 }
 
 function fileContentsToTreeScores(fileContents) {
-    console.log("glorp here");
+    // console.log("glorp here");
     let toRet = "";
     let colNames = Object.keys(fileContents)+",\n";
-    console.log("Senseless crime: ");
-    console.log(colNames);
+    // console.log("Senseless crime: ");
+    // console.log(colNames);
     // console.log(fileContents.packageNames);
     // console.log(fileContents.numDependents);
     toRet += colNames;

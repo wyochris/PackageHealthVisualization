@@ -16,6 +16,6 @@
     "my-command": "./index.js",
     "generate-raw-tree": "./getrawtree.js",
     "generate-tree-file": "./gettreefile.js",
-    "generate-tree-scores": "./gettreescores.js"
+    "scrape-tree-table": "./scrapetreetable.js"
   }
 }
