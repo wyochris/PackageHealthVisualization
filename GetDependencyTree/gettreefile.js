@@ -45,7 +45,7 @@ function rawToTreeFile (raw_tree) {
         return "";
     }
     const rootName = parseNode(raw_rows[0]);
-    const root = new TreeNode(rootName,getScore(rootName),1);
+    const root = new TreeNode(rootName,getScore(rootName),1,0,-1); // subtreeSize not applicable
     let stack = new Stack();
     stack.push(root);
     let length = 0;
@@ -63,7 +63,7 @@ function rawToTreeFile (raw_tree) {
         length = Math.max(curIdx,length);
         let curValue = parseNode(curRow);
         let curScore = getScore(curValue);
-        let curNode = new TreeNode(curValue, curScore, curIdx, curDepth);
+        let curNode = new TreeNode(curValue, curScore, curIdx, curDepth, -1); // subtree size not applicable
 
         if (curDepth > prevDepth) {
             let parent = stack.peek();

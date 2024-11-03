@@ -2,13 +2,14 @@ const LEFT = 0;
 const RIGHT = 1;
 
 class TreeNode {
-  constructor(value, score, idx, depth) {
+  constructor(value, score, idx, depth, subtreeSize) {
     this.value = value;
     this.score = score;
     this.idx = idx;
     this.depth = depth;
     this.descendants = [];
     this.parent = null;
+    this.subtreeSize = subtreeSize;
   }
 
   get left() {

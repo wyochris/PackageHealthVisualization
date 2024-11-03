@@ -15,4 +15,7 @@ For chunking the nodes to make the trees visualize better
   - We'll then return a super tree file that contains the tree file names as their nodes and use this structure to link them all together
     - Node size will be how many nodes each node links to (so normal nodes are like all the same size, but ones to other trees are scaled to the number of nodes they point to)
       - We can calculate the number of nodes in each subtree during the inital simple recurse and refer to these sizes in the super tree file creation
+
 - Color by the minimum quality the subtree of the node represents
+  - And size by the size of the subtree
+  - The schema will consequently need a subtree size parameter added
