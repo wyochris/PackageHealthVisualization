@@ -60,15 +60,15 @@ program
     for (let i = 0; i < results.length; i++) {
         // console.log(Object.keys(results[i]));
         fileContents.packageNames.push(tree_names[i]);
-        fileContents.numDependents.push(results[i].numDependents);
-        fileContents.numDependencies.push(results[i].numDependencies);
-        fileContents.numVersions.push(results[i].numVersions);
-        fileContents.weeklyDownloads.push(results[i].weeklyDownloads);
-        fileContents.unpackedSize.push(results[i].unpackedSize);
-        fileContents.totalFiles.push(results[i].totalFiles);
-        fileContents.issues.push(results[i].issues);
-        fileContents.pullRequests.push(results[i].pullRequests);
-        fileContents.lastPublished.push(results[i].lastPublished);
+        fileContents.numDependents.push(results[i].numDependents?results[i].numDependents:-1);
+        fileContents.numDependencies.push(results[i].numDependencies?results[i].numDependencies:-1);
+        fileContents.numVersions.push(results[i].numVersions?results[i].numVersions:-1);
+        fileContents.weeklyDownloads.push(results[i].weeklyDownloads?results[i].weeklyDownloads:-1);
+        fileContents.unpackedSize.push(results[i].unpackedSize?results[i].unpackedSize:-1);
+        fileContents.totalFiles.push(results[i].totalFiles?results[i].totalFiles:-1);
+        fileContents.issues.push(results[i].issues?results[i].issues:-1);
+        fileContents.pullRequests.push(results[i].pullRequests?results[i].pullRequests:-1);
+        fileContents.lastPublished.push(results[i].lastPublished?results[i].lastPublished:-1);
     }
     
     let scoring_data = fileContentsToTreeScores(fileContents);
