@@ -9,19 +9,22 @@ interface CsvParserProps {
 
 const CsvParser: React.FC<CsvParserProps> = ({ setCsvData }) => {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      parse(file, {
-        complete: (result) => {
-          const treeData = csvToTreeData(result.data as string[][]);
-          setCsvData(treeData); // Set parsed tree data
-        },
-        header: false,
-      });
+    const folder = event.target.files;
+    if (folder) {
+      for (let file of folder) {
+        console.log(file.webkitRelativePath)
+        parse(file, {
+          complete: (result) => {
+            const treeData = csvToTreeData(result.data as string[][]);
+            setCsvData(treeData); // Set parsed tree data
+          },
+          header: false,
+        });
+      }
     }
   };
 
-  return <input type="file" accept=".csv" onChange={handleFileUpload} />;
+  return <input type="file" accept="" ref={input => { if (input) input.webkitdirectory = true; }} onChange={handleFileUpload} />;
 };
 
 export default CsvParser;
