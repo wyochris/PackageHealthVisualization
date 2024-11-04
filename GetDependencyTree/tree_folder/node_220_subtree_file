@@ -2,6 +2,7 @@
 yargs,cliui,string-width,strip-ansi,ansi-regex,wrap-ansi,ansi-styles,color-convert,color-name,string-width,strip-ansi,escalade,get-caller-file,require-directory,string-width,emoji-regex,is-fullwidth-code-point,strip-ansi,y18n,yargs-parser,
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 20,10,1,2,1,6,3,2,1,1,1,1,1,1,4,1,1,1,1,1,
+220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,
 220,
 220,221,
 221,222,

@@ -37,6 +37,7 @@ program
             names:[],
             weights:[],
             subtreeSizes:[],
+            indices:[],
             root:idx,
             edges:[]
         };
@@ -61,6 +62,7 @@ program
         names:[],
         weights:[],
         subtreeSizes:[],
+        indices:[],
         root:1,
         edges:[]
     });
@@ -266,6 +268,7 @@ function helper(root, subtrees, subtreeMinScores, fileContents) {
     fileContents.names.push(root.value);
     fileContents.weights.push(root.score);
     fileContents.subtreeSizes.push(root.subtreeSize);
+    fileContents.indices.push(root.idx);
     for (let i = 0; i < descendants.length; i++) {
         let cur = descendants[i];
         let idx = cur.idx;
@@ -275,6 +278,7 @@ function helper(root, subtrees, subtreeMinScores, fileContents) {
             fileContents.names.push("SUBTREE_NODE"+cur.value); // special marker
             fileContents.weights.push(subtreeMinScores[idx]);
             fileContents.subtreeSizes.push(cur.subtreeSize);
+            fileContents.indices.push(idx);
         } else {
             helper(cur, subtrees, subtreeMinScores, fileContents);
         }
@@ -300,6 +304,10 @@ function treeToSubtreeFile(root, subtrees, subtreeMinScores, fileContents) {
     .reduce((total, subtreeSize) => {
         return `${total}${subtreeSize},`;
       }, "");
+    const indices = fileContents.indices
+    .reduce((total, index) => {
+        return `${total}${index},`;
+      }, "");
     const numNodes = fileContents.numNodes;  
 
     //yeah it needs to be indented like this
@@ -307,6 +315,7 @@ let toRet = `${numNodes+"".trim()},
 ${names+"".trim()}
 ${weights+"".trim()}
 ${subtreeSizes+"".trim()}
+${indices+"".trim()}
 ${fileContents.root+"".trim()},${edges}`;
     return toRet;
 }
