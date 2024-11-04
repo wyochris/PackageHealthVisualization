@@ -1,4 +1,4 @@
-To Use Commands After Modifying
+Installation
 - npm pack
 - npm install --global getdependencytree-1.0.0.tgz
 
