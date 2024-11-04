@@ -1,8 +1,8 @@
-To Use Commands After Modifying
+Installation
 - npm pack
 - npm install --global getdependencytree-1.0.0.tgz
 
-Example
+Examples
 - generate-raw-tree -p ../WebScraper/ -f raw_tree
   - p: path to the project
   - f: filename of output
