@@ -6,17 +6,21 @@ class Node implements d3.SimulationNodeDatum {
   public y: number | undefined;
   constructor (public id: number) {}
   public name: string = ''; // Node name
+  public health: number | undefined; // Node health
+  public nodeSize: number | undefined; // Node size
 }
 
 export const csvToTreeData = (data: string[][]) => {
-    const [, nodeNames, nodeWeights, rootNode, ...edges] = data;
+    const [, nodeNames, nodeHealth, nodeTreeSize, nodeNum, rootNode, ...edges] = data;
   
     // Create nodes based on the node names and weights
     const nodes: Node[] = nodeNames.map((name, index) => {
-      const node = new Node(index + 1);  // Node IDs are 1-based
+      const node = new Node(nodeNum[index] ? parseFloat(nodeNum[index]) : -1);  // Node IDs are 1-based
       node.x = 0;
       node.y = 0;
       node.name = name;
+      node.health = nodeHealth[index] ? parseFloat(nodeHealth[index]) : undefined;
+      node.nodeSize = nodeTreeSize[index] ? parseFloat(nodeTreeSize[index]) : undefined;
       return node;
     });
   

@@ -12,14 +12,16 @@ const CsvParser: React.FC<CsvParserProps> = ({ setCsvData }) => {
     const folder = event.target.files;
     if (folder) {
       for (let file of folder) {
-        console.log(file.webkitRelativePath)
-        parse(file, {
-          complete: (result) => {
-            const treeData = csvToTreeData(result.data as string[][]);
-            setCsvData(treeData); // Set parsed tree data
-          },
-          header: false,
+        if(file.name === "tree_file") {
+          parse(file, {
+            complete: (result) => {
+              console.log(file.webkitRelativePath)
+              const treeData = csvToTreeData(result.data as string[][]);
+              setCsvData(treeData); // Set parsed tree data
+            },
+            header: false,
         });
+        }
       }
     }
   };
