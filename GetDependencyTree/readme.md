@@ -12,9 +12,6 @@ Examples
 - scrape-tree-table -rf raw_tree -sf scoring_data_file 
   - rf: the name of the raw tree file
   - sf: filename of outputted data file to be scored with the model
-- generate-tree-file -rf raw_tree -tf tree_file
-  - rf: the name of the raw tree file
-  - tf: filename of outputted tree file
 - generate-multi-tree-file -rf raw_tree -tfn tree_folder -tf tree_file -s 35
   - tf: filename of outputted tree file
   - tfn: name of the folder containing outputted tree files
