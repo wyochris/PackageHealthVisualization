@@ -130,7 +130,8 @@ function getSubtrees(root, subtrees, treeSizeLimit) {
         });
     for (let i = 0; i < sortedResults.length; i++) {
         let curResult = sortedResults[i];
-        if (sizeLeft - curResult.size >= 0) { // we wouldn't run out
+        let remainingItems = sortedResults.length-(i+1);
+        if (sizeLeft - (curResult.size + (remainingItems-1)) >= 0) { // we wouldn't run out
             sizeLeft -= curResult.size;
         } else { // we would ru out, reduced to a size one pointer essentially
             sizeLeft--; // only removing one thing
