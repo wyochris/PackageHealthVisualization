@@ -8,6 +8,7 @@ class Node implements d3.SimulationNodeDatum {
   public name: string = ''; // Node name
   public health: number | undefined; // Node health
   public nodeSize: number | undefined; // Node size
+  public isSubTree: boolean = false; // Whether the node is a subtree root
 }
 
 export const csvToTreeData = (data: string[][]) => {
@@ -20,7 +21,13 @@ export const csvToTreeData = (data: string[][]) => {
       node.y = 0;
       node.name = name;
       node.health = nodeHealth[index] ? parseFloat(nodeHealth[index]) : undefined;
-      node.nodeSize = nodeTreeSize[index] ? parseFloat(nodeTreeSize[index]) : undefined;
+      node.nodeSize = nodeTreeSize[index] ? parseFloat(nodeTreeSize[index])  : undefined;
+      if (node.name.startsWith('SUBTREE_NODE')) {
+        node.isSubTree = true;
+      }
+      else {
+        node.isSubTree = false;
+      }
       return node;
     });
   

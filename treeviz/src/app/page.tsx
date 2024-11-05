@@ -10,7 +10,7 @@ const TreeVisualizerPage: React.FC = () => {
   return (
     <div>
       <h1>Tree Visualizer</h1>
-      <CsvParser setCsvData={setCsvData} />
+      <CsvParser setCsvData={setCsvData} subTreeId={-1} />
       <TreeVisualizer csvData={csvData} />
     </div>
   );

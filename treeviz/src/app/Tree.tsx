@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
+import Link from 'next/link';
+
 
 interface TreeProps {
     nodes: any;
@@ -19,9 +21,11 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
         svg.selectAll('*').remove(); // delete previous 
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id((d: any) => d.id).distance(20).strength(0.5))
-            .force("charge", d3.forceManyBody().strength(-50))
-            .force('center', d3.forceCenter(width / 2, (height - 49.5)/ 2.5))
+            .force("link", d3.forceLink(links).id((d: any) => d.id).distance(85).strength(0.5))
+            .force("charge", d3.forceManyBody().strength(-250))
+            // .force('center', d3.forceCenter(width / 2, (height - 49.5)/ 2.5))
+            .force('center', d3.forceCenter(width / 4, height)) 
+
 
         // Append links.
         const link = svg.append("g")
@@ -53,12 +57,28 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
                     d.fx = null;
                     d.fy = null;
                 })
-            );
+        )
+        .each(function(d: any) {
+            if (d.isSubTree === true && d.id !== rootNode) {
+                d3.select(this)
+                .append('rect')
+                .attr('width', 20*Math.log10(1+(d.nodeSize/2)))
+                .attr('height', 20*Math.log10(1+(d.nodeSize/2)))
+                .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'))
+                .attr('id', d.id)
+            } else {
+                d3.select(this)
+                .append('circle')
+                .attr('r', 20*Math.log10(1+(d.nodeSize))) //weight = subtree size
+                .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'));
+            }
+        });
 
-        node
-            .append('circle')
-            .attr('r', 20) //weight = health
-            .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'));
+        const nodeSubtree = svg.selectAll('rect');
+        nodeSubtree.on("click", function() {
+            window.location.href = `/${(nodeSubtree.attr('id'))}`;
+          });
+
 
         node.append("text") // labels to beinside the circle
             .text((d: any) => d.name)
