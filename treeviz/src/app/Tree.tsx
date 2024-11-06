@@ -24,7 +24,7 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
             .force("link", d3.forceLink(links).id((d: any) => d.id).distance(85).strength(0.5))
             .force("charge", d3.forceManyBody().strength(-250))
             // .force('center', d3.forceCenter(width / 2, (height - 49.5)/ 2.5))
-            .force('center', d3.forceCenter(width / 4, height)) 
+            .force('center', d3.forceCenter(width / 2, height/2)) 
 
 
         // Append links.
@@ -64,13 +64,13 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
                 .append('rect')
                 .attr('width', 20*Math.log10(1+(d.nodeSize/2)))
                 .attr('height', 20*Math.log10(1+(d.nodeSize/2)))
-                .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'))
+                .style('fill', (d: any) =>  d3.interpolateRdYlGn(d.health/100))
                 .attr('id', d.id)
             } else {
                 d3.select(this)
                 .append('circle')
                 .attr('r', 20*Math.log10(1+(d.nodeSize))) //weight = subtree size
-                .style('fill', (d: any) => (d.id === rootNode ? 'red' : 'blue'));
+                .style('fill', (d: any) => (d.id === rootNode ? 'white' : d3.interpolateRdYlGn(d.health/100)));
             }
         });
 
@@ -108,3 +108,4 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
 };
 
 export default Tree;
+
