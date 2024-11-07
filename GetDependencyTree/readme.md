@@ -32,6 +32,7 @@ Usage Flow
   - Make a version without the packageNames and scores columns; this is for the model
     - Use a table editor like Excel or Numbers
 - Run the R file for the model
+  - Make sure to update the paths to where you want to save stuff
   - Check to make sure that the schema is identical between the Node Project Data and the scraped output
     - Use the str() command, should be only numerical data
       - If numerical columns have extra commas in them:
