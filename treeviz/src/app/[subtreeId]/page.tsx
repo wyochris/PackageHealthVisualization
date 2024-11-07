@@ -2,28 +2,43 @@
 
 import React, { useEffect, useState } from 'react';
 import TreeVisualizer from '../TreeVisualizer';
-import CsvParser from '../CsvParser';
 import { useParams } from 'next/navigation';
 
-const TreeVisualizerPage: React.FC = () => {
-  const [csvData, setCsvData] = useState<any>();
-  const [nodeId, setNodeId] = useState<number | null>();
+const SubTreePage: React.FC = () => {
+  const [csvData, setCsvData] = useState<any>(null);
   const { subtreeId } = useParams();
 
   useEffect(() => {
-      async function fetchData() {
-        setNodeId(Number(subtreeId));
+    const storedFilesData = sessionStorage.getItem("csvFilesData");
+
+    if (storedFilesData) {
+      try {
+        const parsedFilesData = JSON.parse(storedFilesData);
+        const specificSubTreeData = parsedFilesData[`node_${subtreeId}_subtree_file`];
+
+        if (specificSubTreeData) {
+          setCsvData(specificSubTreeData);
+        } else {
+          console.warn(`Subtree data for ID node_${subtreeId}_subtree_file not found.`);
+        }
+      } catch (error) {
+        console.error("Error parsing csvFilesData from sessionStorage:", error);
       }
-      fetchData();
+    } else {
+      console.warn("No csvFilesData found in sessionStorage.");
+    }
   }, [subtreeId]);
 
   return (
     <div>
-      <h1>Tree Visualizer</h1>
-      <CsvParser setCsvData={setCsvData} subTreeId={nodeId ? nodeId : -1} />
-      <TreeVisualizer csvData={csvData} />
+      <h1>Subtree Visualizer for ID {subtreeId}</h1>
+      {csvData ? (
+        <TreeVisualizer csvData={csvData} />
+      ) : (
+        <p>Data for this subtree ID not found. See clg.</p>
+      )}
     </div>
   );
 };
 
-export default TreeVisualizerPage;
+export default SubTreePage;
