@@ -5,18 +5,21 @@ const execSync = require('child_process').execSync;
 const fs = require('node:fs');
 const TreeNode = require('./tree.js');
 const Stack = require('./stack.js');
+const csv = require('csv-parser');
 
 program
   .version('1.0.0')
   .description('Outputs tree file for given raw tree file')
   .requiredOption('-tf, --tree_filename <tree_filename>', "Tree Filename", "tree_file")
   .requiredOption('-rf, --raw_file <filename>', "Raw File", "raw_tree")
-  .action((options) => {
+  .requiredOption('-ps, --package_scores <filename>', "Package Scores File", "package_scores")
+  .action(async (options) => {
     const curPath = execSync(`pwd`, { encoding: 'utf-8' }).slice(0,-1); // remove newline
     const raw_file = execSync(`cat ${options.raw_file}`, { encoding: 'utf-8' });  // the default is 'buffer'
+    const scores = await parseCsvToObject(options.package_scores);
     const tree_file =
     // raw_file;
-    rawToTreeFile(raw_file);
+    rawToTreeFile(raw_file, scores);
     fs.writeFile(`${curPath}/${options.tree_filename}`,
         tree_file,
         err => {
@@ -39,13 +42,13 @@ Algorithm
 - if cur depth is greater then add a child to stack top; push cur onto stack top
 - if it is the same depth or less then pop off; push cur onto stack top
 */
-function rawToTreeFile (raw_tree) {
+function rawToTreeFile (raw_tree, scores) {
     let raw_rows = raw_tree.split('\n');
     if (raw_rows.length == 0) {
         return "";
     }
     const rootName = parseNode(raw_rows[0]);
-    const root = new TreeNode(rootName,getScore(rootName),1,0,-1); // subtreeSize not applicable
+    const root = new TreeNode(rootName,scores[rootName],1,0,-1); // subtreeSize not applicable
     let stack = new Stack();
     stack.push(root);
     let length = 0;
@@ -62,7 +65,7 @@ function rawToTreeFile (raw_tree) {
         let curIdx = i+1; // 1-indexed
         length = Math.max(curIdx,length);
         let curValue = parseNode(curRow);
-        let curScore = getScore(curValue);
+        let curScore = scores[curValue];
         let curNode = new TreeNode(curValue, curScore, curIdx, curDepth, -1); // subtree size not applicable
 
         if (curDepth > prevDepth) {
@@ -109,14 +112,6 @@ function parseNode(curRow) {
         }
     }
     return "";
-}
-
-// TODO
-   // so we need to also make csv of all the treenodes names
-   // then scrape for all of their tabular values
-   // then run it in R with our scraped data
-function getScore(value) {
-    return -1;
 }
 
 // Tree.csv structure:
@@ -195,3 +190,23 @@ ${weights+"".trim()}
 ${fileContents.root+"".trim()},${edges}`;
     return toRet;
 }
+
+function parseCsvToObject(filename) {
+    return new Promise((resolve, reject) => {
+      const result = {};
+
+      fs.createReadStream(filename)
+        .pipe(csv())
+        .on('data', (row) => {
+            // console.log("bruh");
+          const [key, value] = Object.values(row);
+          result[key] = value;
+        })
+        .on('end', () => {
+          resolve(result);
+        })
+        .on('error', (error) => {
+          reject(error);
+        });
+    });
+  }
