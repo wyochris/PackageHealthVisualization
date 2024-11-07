@@ -6,13 +6,14 @@ Examples
 - generate-raw-tree -p ../WebScraper/ -f raw_tree
   - p: path to the project
   - f: filename of output
-- generate-tree-file -rf raw_tree -tf tree_file
+- generate-tree-file -rf raw_tree -tf tree_file -ps final_scores_results.csv
   - rf: the name of the raw tree file
   - tf: filename of outputted tree file
-- scrape-tree-table -rf raw_tree -sf scoring_data_file 
+  - ps: filename of package scores
+- scrape-tree-table -rf raw_tree -sf scoring_data_file.csv
   - rf: the name of the raw tree file
   - sf: filename of outputted data file to be scored with the model
-- generate-multi-tree-file -rf raw_tree -tfn tree_folder -tf tree_file -s 35
+- generate-multi-tree-file -rf raw_tree -tfn tree_folder -tf tree_file -s 35 -ps final_scores_results.csv
   - tf: filename of outputted tree file
   - tfn: name of the folder containing outputted tree files
     - The one you specify the name for is the root, and you parse all the others
@@ -20,3 +21,4 @@ Examples
   - s: the maximum size of the subtrees
     - To aid visualization via limiting the number of nodes somewhat
     - Might have to increase it for certain trees
+  - ps: filename of package scores

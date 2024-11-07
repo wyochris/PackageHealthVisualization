@@ -5,6 +5,7 @@ const execSync = require('child_process').execSync;
 const fs = require('node:fs');
 const TreeNode = require('./tree.js');
 const Stack = require('./stack.js');
+const csv = require('csv-parser');
 
 program
   .version('1.0.0')
@@ -13,7 +14,8 @@ program
   .requiredOption('-tfn, --tree_foldername <tree_foldername>', "Tree Foldername", "tree_file")
   .requiredOption('-rf, --raw_file <filename>', "Raw File", "raw_tree")
   .requiredOption('-s, --tree_size_limit <size>', "Tree Size Limit", "30")
-  .action((options) => {
+  .requiredOption('-ps, --package_scores <filename>', "Package Scores File", "package_scores")
+  .action(async (options) => {
     const curPath = execSync(`pwd`, { encoding: 'utf-8' }).slice(0,-1); // remove newline
     const raw_file = execSync(`cat ${options.raw_file}`, { encoding: 'utf-8' });  // the default is 'buffer'
     if (fs.existsSync(`./${options.tree_foldername}/`)) {
@@ -21,7 +23,8 @@ program
     } 
     execSync(`mkdir ${options.tree_foldername}`, { encoding: 'utf-8' });  // the default is 'buffer'
 
-    let tree = rawToTree(raw_file);
+    const scores = await parseCsvToObject(options.package_scores);
+    let tree = rawToTree(raw_file, scores);
     let subtrees = {}; // "set" of subtree roots; is if (typeof subtrees[idx] !== 'undefined')
         // schema is the idx to the node
     getSubtrees(tree, subtrees, options.tree_size_limit); // store indices, line numbers
@@ -141,8 +144,8 @@ function getSubtrees(root, subtrees, treeSizeLimit) {
     return treeSizeLimit-sizeLeft;
 }
 
-function rawToTree(raw_tree) {
-    let almost_ripe = rawToTreeHelper(raw_tree);
+function rawToTree(raw_tree, scores) {
+    let almost_ripe = rawToTreeHelper(raw_tree, scores);
     // console.log(Object.values(almost_ripe));
     addSubtreeSizes(almost_ripe);
     return almost_ripe;
@@ -163,13 +166,13 @@ function addSubtreeSizes(root) {
     return toRet;
 }
 
-function rawToTreeHelper (raw_tree) {
+function rawToTreeHelper (raw_tree, scores) {
     let raw_rows = raw_tree.split('\n');
     if (raw_rows.length == 0) {
         return "";
     }
     const rootName = parseNode(raw_rows[0]);
-    const root = new TreeNode(rootName,getScore(rootName),1,0,-1); // subtreesize not applicable yet
+    const root = new TreeNode(rootName,scores[rootName],1,0,-1); // subtreesize not applicable yet
     let stack = new Stack();
     stack.push(root);
     let length = 0;
@@ -186,7 +189,7 @@ function rawToTreeHelper (raw_tree) {
         let curIdx = i+1; // 1-indexed
         length = Math.max(curIdx,length);
         let curValue = parseNode(curRow);
-        let curScore = getScore(curValue);
+        let curScore = scores[curValue];
         let curNode = new TreeNode(curValue, curScore, curIdx, curDepth, -1); // can't say subtree size yet
 
         if (curDepth > prevDepth) {
@@ -244,10 +247,6 @@ function getSubtreeMinScores(root, subtrees, subtreeMinScores) {
         subtreeMinScores[root.idx] = toRet;
     }
     return toRet;
-}
-
-function getScore(value) {
-    return -1;
 }
 
 // Updated MultiTree.csv structure:
@@ -320,3 +319,23 @@ ${indices+"".trim()}
 ${fileContents.root+"".trim()},${edges}`;
     return toRet;
 }
+
+function parseCsvToObject(filename) {
+    return new Promise((resolve, reject) => {
+      const result = {};
+
+      fs.createReadStream(filename)
+        .pipe(csv())
+        .on('data', (row) => {
+            // console.log("bruh");
+          const [key, value] = Object.values(row);
+          result[key] = value;
+        })
+        .on('end', () => {
+          resolve(result);
+        })
+        .on('error', (error) => {
+          reject(error);
+        });
+    });
+  }
