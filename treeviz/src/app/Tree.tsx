@@ -62,15 +62,17 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
             if (d.isSubTree === true && d.id !== rootNode) {
                 d3.select(this)
                 .append('rect')
-                .attr('width', 20*Math.log10(1+(d.nodeSize/2)))
-                .attr('height', 20*Math.log10(1+(d.nodeSize/2)))
+                .attr('width', 20*Math.log10(20*Math.log10(1+(d.nodeSize/2))))
+                .attr('height', 20*Math.log10(20*Math.log10(1+(d.nodeSize/2))))
                 .style('fill', (d: any) =>  d3.interpolateRdYlGn(d.health/100))
+                // 90, 78, 64, 38
+                // green, yellow, orange, red
                 .attr('id', d.id)
             } else {
                 d3.select(this)
                 .append('circle')
-                .attr('r', 20*Math.log10(1+(d.nodeSize))) //weight = subtree size
-                .style('fill', (d: any) => (d.id === rootNode ? 'white' : d3.interpolateRdYlGn(d.health/100)));
+                .attr('r', 20*Math.log10(20*Math.log10(1+(d.nodeSize)))) //weight = subtree size
+                .style('fill', (d: any) => (d3.interpolateRdYlGn(d.health/100)));
             }
         });
 
@@ -79,9 +81,8 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
             window.location.href = `/${(nodeSubtree.attr('id'))}`;
           });
 
-
         node.append("text") // labels to beinside the circle
-            .text((d: any) => d.name)
+            .text((d: any) => d.id === rootNode ? 'ROOT: ' + d.name :  d.name)
             .attr('x', 12)
             .attr('y', 4)
             .style('font-size', '12px')

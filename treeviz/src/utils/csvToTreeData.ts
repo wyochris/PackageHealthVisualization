@@ -19,11 +19,12 @@ export const csvToTreeData = (data: string[][]) => {
       const node = new Node(nodeNum[index] ? parseFloat(nodeNum[index]) : -1);  // Node IDs are 1-based
       node.x = 0;
       node.y = 0;
-      node.name = name;
       node.health = nodeHealth[index] ? parseFloat(nodeHealth[index]) : undefined;
       node.nodeSize = nodeTreeSize[index] ? parseFloat(nodeTreeSize[index])  : undefined;
-      if (node.name.startsWith('SUBTREE_NODE')) {
+      node.name = name;
+      if (name.startsWith('SUBTREE_NODE')) {
         node.isSubTree = true;
+        node.name = name.substring(12);
       }
       else {
         node.isSubTree = false;
