@@ -1,13 +1,38 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import Link from 'next/link';
-
 
 interface TreeProps {
     nodes: any;
     links: any;
     rootNode: number;
 }
+
+function chooseColor(val: number) {
+    if(!val) {
+        return 'lightblue';
+    }
+    else if (val > 90) {
+        return 'green';
+    }
+    else if (val > 77) {
+        return 'lightgreen';
+    }
+    else if (val > 73) {
+        return 'yellow';
+    }
+    else if (val > 68) {
+        return 'orange';
+    }
+    else if (val > 63) {
+        return 'darkorange';
+    }
+    else if (val > 53) {
+        return 'orangered'
+    }
+    else {
+        return 'red';
+    }  
+}   
 
 // d3 force directed tree graph used as reference: https://observablehq.com/@d3/force-directed-tree
 const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
@@ -64,7 +89,7 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
                 .append('rect')
                 .attr('width', 20*Math.log10(20*Math.log10(1+(d.nodeSize/2))))
                 .attr('height', 20*Math.log10(20*Math.log10(1+(d.nodeSize/2))))
-                .style('fill', (d: any) =>  d3.interpolateRdYlGn(d.health/100))
+                .style('fill', (d: any) =>  chooseColor(d.health))
                 // 90, 78, 64, 38
                 // green, yellow, orange, red
                 .attr('id', d.id)
@@ -75,15 +100,9 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
                 d3.select(this)
                 .append('circle')
                 .attr('r', 20*Math.log10(20*Math.log10(1+(d.nodeSize)))) //weight = subtree size
-                .style('fill', (d: any) => (d3.interpolateRdYlGn(d.health/100)));
+                .style('fill', (d: any) => chooseColor(d.health));
             }
         });
-
-        // const nodeSubtree = svg.selectAll('rect');
-        // nodeSubtree.on("click", function() {
-        //     console.log(nodeSubtree.attr('id'));
-        //     // window.location.href = `/${(nodeSubtree.attr('id'))}`;
-        //   });
 
         node.append("text") // labels to beinside the circle
             .text((d: any) => d.id === rootNode ? 'ROOT: ' + d.name :  d.name)
