@@ -35,7 +35,7 @@ const SubTreePage: React.FC = () => {
       {csvData ? (
         <TreeVisualizer csvData={csvData} />
       ) : (
-        <p>Data for this subtree ID not found. See clg.</p>
+        <p></p>
       )}
     </div>
   );

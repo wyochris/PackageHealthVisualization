@@ -68,6 +68,9 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
                 // 90, 78, 64, 38
                 // green, yellow, orange, red
                 .attr('id', d.id)
+                .on("click", function() {
+                    window.location.href = `/${(d.id)}`;
+                  });
             } else {
                 d3.select(this)
                 .append('circle')
@@ -76,10 +79,11 @@ const Tree: React.FC<TreeProps> = ({ nodes, links, rootNode }) => {
             }
         });
 
-        const nodeSubtree = svg.selectAll('rect');
-        nodeSubtree.on("click", function() {
-            window.location.href = `/${(nodeSubtree.attr('id'))}`;
-          });
+        // const nodeSubtree = svg.selectAll('rect');
+        // nodeSubtree.on("click", function() {
+        //     console.log(nodeSubtree.attr('id'));
+        //     // window.location.href = `/${(nodeSubtree.attr('id'))}`;
+        //   });
 
         node.append("text") // labels to beinside the circle
             .text((d: any) => d.id === rootNode ? 'ROOT: ' + d.name :  d.name)
