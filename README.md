@@ -18,10 +18,6 @@ Package Health Visualization is a tool designed to help developers analyze and u
 - **Data Parsing**:
   - Supports importing data via CSV files for custom CSV dependency analysis.
 
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
 ---
 
 ## Future Enhancements
